@@ -3,6 +3,7 @@ File containing all of the flak endpoints, in charge of handling
 user requests for managing documents a sections
 """
 from flask import request
+from marshmallow import ValidationError
 from werkzeug.exceptions import BadRequest, UnprocessableEntity
 
 from app import app
@@ -17,6 +18,33 @@ def handle_document_request():
     if request.method == 'GET':
         path = request.args.get("section", default="", type=str)
         return get_document_section(path)
+    else:
+        return add_document_section(request.json)
+
+
+def add_document_section(request_data):
+    """
+    This endpoint handles the requests for adding a new document, or
+    section, according to a specified path.
+
+    Args:
+        request_data (Any): Body from the requests being processed
+
+    Raises:
+        BadRequest: If request body has validation errors
+
+    Returns:
+        Response: Sucess message indicating that the data was added
+    """
+
+    try:
+        data = create_document_section_schema.load(request_data)
+        _add_section_to_document(**data)
+        return "Success", 201
+    except ValidationError as err:
+        raise BadRequest(
+            f"Validation errors on Request Body: {', '.join(err.messages)}"
+        )
 
 
 def get_document_section(path):
