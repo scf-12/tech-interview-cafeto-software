@@ -2,8 +2,42 @@
 File containing all of the flak endpoints, in charge of handling
 user requests for managing documents a sections
 """
+from flask import request
 from werkzeug.exceptions import BadRequest, UnprocessableEntity
-from app.models import documents_dict
+
+from app import app
+from app.models import CreateDocumentSectionSchema, documents_dict
+
+create_document_section_schema = CreateDocumentSectionSchema()
+
+
+@app.route("/document", methods=["GET", "POST"])
+def handle_document_request():
+
+    if request.method == 'GET':
+        path = request.args.get("section", default="", type=str)
+        return get_document_section(path)
+
+
+def get_document_section(path):
+    """
+    This endpoint handles the requests for consulting a document, or a
+    section from a document, according to a specified path.
+
+    Args:
+        path (str): Query parameter from the request being processed
+
+    Raises:
+        BadRequest: If the request is missing the path
+
+    Returns:
+        Response: Document or section that matches the path
+    """
+    if path:
+        section = _get_section_from_path(path, strict=True)
+        return section, 200
+    else:
+        raise BadRequest("Missing required parameter(s): 'section'")
 
 
 def _add_section_to_document(path, name, text):
