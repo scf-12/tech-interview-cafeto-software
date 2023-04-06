@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "a03257db-c9e3-4924-9154-30085c3a8ee0",
+		"name": "CafetoSoftware_Interview",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25979776"
+	},
+	"item": [
+		{
+			"name": "Document | Query Section",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"root_document\",\n    \"name\": \"s1\",\n    \"text\": \"some text for subsection 1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/document",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document | Add Section",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/document?section=root_document",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"document"
+					],
+					"query": [
+						{
+							"key": "section",
+							"value": "root_document"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
