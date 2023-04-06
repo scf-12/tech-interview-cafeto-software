@@ -2,9 +2,33 @@
 File containing all of the flak endpoints, in charge of handling
 user requests for managing documents a sections
 """
-
 from werkzeug.exceptions import BadRequest, UnprocessableEntity
 from app.models import documents_dict
+
+
+def _add_section_to_document(path, name, text):
+
+    section = dict(name=name, text=text, sections=[])
+    parent_section = _get_section_from_path(path)
+
+    if parent_section:
+        current_subsection = _get_subsection_from_path(
+            parent_section, [name], strict=False
+        )
+        if current_subsection:
+            raise UnprocessableEntity(
+                f"The section '{path}.{name}' already exists"
+            )
+        else:
+            parent_section["sections"].append(section)
+    elif "." not in path:
+        documents_dict[path] = dict(
+            name=path, text="", sections=[section]
+        )
+    else:
+        raise UnprocessableEntity(
+            f"Unable to create section with path '{path}'"
+        )
 
 def _get_section_from_path(path, strict=False):
     """
